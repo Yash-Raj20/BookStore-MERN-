@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Login() {
   const {
@@ -8,22 +10,55 @@ function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    const userInfo = {
+      email: data.email,
+      password: data.password,
+    };
+    async function login() {
+      try {
+        const res = await axios.post(
+          "http://localhost:4001/users/login",
+          userInfo
+        );
+        console.log(res.data);
+        if (res.data) {
+          toast.success("Login Successfull");
+          document.getElementById("my_modal_3").close();
+          setTimeout(() => {
+            window.location.reload();
+            localStorage.setItem("Users", JSON.stringify(res.data.user));
+          }, 1000);
+        }
+      } catch (err) {
+        if (err.response) {
+          console.log(err);
+          toast.error("Error: " + err.response.data.message);
+          setTimeout(() => {}, 2000);
+        } else {
+          console.log(err);
+          toast.error("Error: Unknown error occurred");
+        }
+      }
+    }
+    login();
+  };
   return (
     <div>
       <dialog id="my_modal_3" className="modal">
-        <div className="modal-box">
+        <div className="modal-box dark:bg-slate-400">
           <form onSubmit={handleSubmit(onSubmit)} method="dialog">
             {/* if there is a button in form, it will close the modal */}
             <Link
               to="/"
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              onClick={() => document.getElementById("my_modal_3").close()}
             >
               ✕
             </Link>
 
-            <h3 className="font-bold text-lg">Login</h3>
-            <div className="flex flex-col mt-5 space-y-4">
+            <h3 className="font-bold text-lg dark:text-slate-900">Login</h3>
+            <div className="flex flex-col mt-5 space-y-4 dark:text-slate-900">
               {/* Email */}
               <span>Email</span>
               <input
@@ -59,7 +94,7 @@ function Login() {
                 Not registered?{" "}
                 <Link
                   to="/signup"
-                  className="underline text-blue-500 cursor-pointer"
+                  className="underline text-blue-500 cursor-pointer dark:text-blue-700"
                 >
                   Register
                 </Link>

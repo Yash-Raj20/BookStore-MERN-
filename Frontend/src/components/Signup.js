@@ -1,19 +1,56 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Signup() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    const userInfo = {
+      fullname: data.fullname,
+      email: data.email,
+      password: data.password,
+    };
+    async function signup() {
+      try {
+        const res = await axios.post(
+          "http://localhost:4001/users/signup",
+          userInfo
+        );
+        console.log(res.data);
+        if (res.data) {
+          toast.success("Signup Successfull");
+          setTimeout(() => {
+            navigate(from, { replace: true });
+            window.location.reload();
+          }, 1000);
+        }
+        localStorage.setItem("Users", JSON.stringify(res.data.user));
+      } catch (err) {
+        if (err.response) {
+          console.log(err);
+          toast.error("Error: " + err.response.data.message);
+        } else {
+          console.log(err);
+          toast.error("Error: Unknown error occurred");
+        }
+      }
+    }
+    signup();
+  };
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="w-[500px]">
-        <div className="modal-box  shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_1px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset]">
+        <div className="modal-box dark:bg-slate-400 shadow-[rgba(6,_24,_44,_0.4)_0px_0px_0px_1px,_rgba(6,_24,_44,_0.65)_0px_4px_6px_-1px,_rgba(255,_255,_255,_0.08)_0px_1px_0px_inset] dark:shadow-[0px_5px_1px_rgba(221,_221,_221,_1),_0_5px_7px_rgba(204,_204,_204,_1)]">
           <form onSubmit={handleSubmit(onSubmit)} method="dialog">
             {/* if there is a button in form, it will close the modal */}
             <Link
@@ -23,17 +60,17 @@ function Signup() {
               ✕
             </Link>
 
-            <h3 className="font-bold text-lg">Signup</h3>
-            <div className="flex flex-col mt-5 space-y-4">
+            <h3 className="font-bold text-lg dark:text-slate-900">Signup</h3>
+            <div className="flex flex-col mt-5 space-y-4 dark:text-slate-900">
               {/* Name */}
               <span>Name</span>
               <input
                 type="text"
                 placeholder="Enter your fullname"
                 className="w-80 px-3 py-2 border rounded-md outline-none"
-                {...register("name", { required: true })}
+                {...register("fullname", { required: true })}
               />
-              {errors.name && (
+              {errors.fullname && (
                 <span className="text-red-500 text-sm">
                   This field is required
                 </span>
@@ -73,7 +110,7 @@ function Signup() {
               <p className="text-xl">
                 Have account?{" "}
                 <button
-                  className="underline text-blue-500 cursor-pointer"
+                  className="underline text-blue-500 cursor-pointer dark:text-blue-700"
                   onClick={() =>
                     document.getElementById("my_modal_3").showModal()
                   }
