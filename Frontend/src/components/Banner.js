@@ -1,11 +1,11 @@
 import React from "react";
-import img from '../images/Banner.jpg'
+import img from '../images/Banner.png'
 
 function Banner() {
   return (
     <>
       <div className="flex max-w-screen-2xl container mx-auto md:px-20 px-4 flex-col md:flex-row my-10">
-        <div className="w-full md:w-1/2 mt-12 md:mt-32">
+        <div className="order-2 md:order-1 w-full md:w-1/2 mt-12 md:mt-32">
           <div className="space-y-12">
             <h1 className="text-4xl font-bold">
               Hello, welcome here to learn something{" "}
@@ -30,10 +30,10 @@ function Banner() {
             <input type="text" className="grow" placeholder="Email" />
           </label>
           </div>
-          <button className="btn mt-6 btn-secondary">Submit</button>
+          <button className="btn mt-6 btn-secondary">Subscribe Now!</button>
         </div>
-        <div className="w-full md:w-1/2">
-            <img src={img} alt="Banner" className="w-92 h-92 object-cover"/>
+        <div className="order-1 w-full md:w-1/2">
+            <img src={img} alt="Banner" className="w-92 h-92 object-cover mt-10"/>
         </div>
       </div>
     </>

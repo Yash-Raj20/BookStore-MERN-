@@ -19,7 +19,7 @@ function Cards({item}) {
             <p>{item.title}</p>
             <div className="card-actions flex justify-between pt-2">
               <div className="px-2 py-1 border-2 rounded-full">${item.price}</div>
-              <div className="px-2 py-1 border-2 rounded-full cursor-pointer hover:bg-pink-500 hover:text-white duration-200">Buy Now</div>
+              <div className="px-2 py-1 border-2 rounded-full cursor-pointer hover:bg-pink-5000 hover:text-white duration-200">Buy Now</div>
             </div>
           </div>
         </div>
